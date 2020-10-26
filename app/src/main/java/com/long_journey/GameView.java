@@ -36,7 +36,7 @@ public class GameView extends SurfaceView implements Runnable {
     private HealthPoint displayHP;
     private boolean isMoreAsteroid = false;
     private int MoreAsteroidCounter = 0;
-    private int MoreAsteroidCounterLimit = 3;
+    private int MoreAsteroidCounterLimit = 19;
     private int HoldTime = 0;
     private boolean isHolding = false;
     private int WaveLevel=1;
@@ -127,7 +127,7 @@ public class GameView extends SurfaceView implements Runnable {
             background2.x = screenX;
 
             paint = new Paint();
-            paint.setTextSize(screenX/50);
+            paint.setTextSize(screenX/50f);
             paint.setColor(Color.WHITE);
 
             paintText = new Paint();
@@ -286,6 +286,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction() & MotionEvent.ACTION_MASK;
         int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
@@ -298,13 +299,13 @@ public class GameView extends SurfaceView implements Runnable {
                 x[pointerId] = (int)event.getX(pointerIndex);
                 y[pointerId] = (int)event.getY(pointerIndex);
 
-                if (x[pointerId] < screenX / 2 && y[pointerId] < screenY / 2) {
+                if (x[pointerId] < screenX / 2f && y[pointerId] < screenY / 2f) {
                     astronaut.isGoingUp = true;
                     astronaut.isGoingDown = false;
-                }else if (x[pointerId] < screenX / 2 && y[pointerId] > screenY / 2) {
+                }else if (x[pointerId] < screenX / 2f && y[pointerId] > screenY / 2f) {
                     astronaut.isGoingDown = true;
                     astronaut.isGoingUp = false;
-                }else if(x[pointerId] > screenX/2){
+                }else if(x[pointerId] > screenX/2f){
                     isHolding = true;
                 }
                 break;
@@ -315,13 +316,13 @@ public class GameView extends SurfaceView implements Runnable {
                 x[pointerId] = (int)event.getX(pointerIndex);
                 y[pointerId] = (int)event.getY(pointerIndex);
 
-                if (x[pointerId] < screenX / 2 && y[pointerId] < screenY / 2) {
+                if (x[pointerId] < screenX / 2f && y[pointerId] < screenY / 2f) {
                     astronaut.isGoingUp = false;
-                }else if (x[pointerId] < screenX / 2 && y[pointerId] > screenY / 2) {
+                }else if (x[pointerId] < screenX / 2f && y[pointerId] > screenY / 2f) {
                     astronaut.isGoingDown = false;
                 }
 
-                if(x[pointerId] > screenX/2 && y[pointerId] < screenY/2){
+                if(x[pointerId] > screenX/2f && y[pointerId] < screenY/2f){
                     if(HoldTime > 10) {
                         astronaut.isCharge = true;
                         astronaut.chargedShootType = 1;
@@ -333,7 +334,7 @@ public class GameView extends SurfaceView implements Runnable {
                     }
                     isHolding = false;
                 }
-                if(x[pointerId] > screenX/2 && y[pointerId] > screenY/2){
+                if(x[pointerId] > screenX/2f && y[pointerId] > screenY/2f){
                     if(HoldTime > 10) {
                         astronaut.isCharge = true;
                         astronaut.chargedShootType = 0;
@@ -582,7 +583,7 @@ public class GameView extends SurfaceView implements Runnable {
                         if (!settings.getBoolean("mute", false)) {
                             soundPoolExplosion.play(explosionSound, 1, 1, 0, 0, 1);
                         }
-                        if(MoreAsteroidCounter >= 19){
+                        if(MoreAsteroidCounter >= MoreAsteroidCounterLimit){//Set more asteroids
                             MoreAsteroidCounter = 0;
                             isMoreAsteroid = true;
                         }else{
