@@ -2,6 +2,7 @@ package com.long_journey;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,17 +13,19 @@ import android.widget.Toast;
 public class UpgradeActivity extends AppCompatActivity {
 
     private static final String LONG_JOURNEY_PREFERENCES = "LONG_JOURNEY_PREFERENCES";
-    private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
     private int orb, metal, gunLevel, bullet;
     private TextView textViewOrb, textViewGunLevel, textViewMetal, textViewBullet;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upgrade);
-        settings = getSharedPreferences(LONG_JOURNEY_PREFERENCES, 0);
+        SharedPreferences settings = getSharedPreferences(LONG_JOURNEY_PREFERENCES, 0);
+        editor = settings.edit();
 
-        orb = settings.getInt("orb",0);
+        orb = settings.getInt("blue_orb",0);
         metal = settings.getInt("metal",0);
         gunLevel = settings.getInt("gunLevel",1);
         bullet = settings.getInt("bullet",3);
@@ -45,17 +48,24 @@ public class UpgradeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(orb<10){
-                    Toast.makeText(getApplicationContext(),"Não tem orb suficiente",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Não tem blue_orb suficiente",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(metal<1){
-                    Toast.makeText(getApplicationContext(),"Não tem metal rochoso suficiente",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Não tem metal rochoso suficiente",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 orb-=10;
                 metal--;
                 gunLevel++;
                 textViewGunLevel.setText(String.valueOf(gunLevel));
+                textViewMetal.setText(String.valueOf(metal));
+                textViewOrb.setText(String.valueOf(orb));
+
+                editor.putInt("blue_orb", orb);
+                editor.putInt("metal", metal);
+                editor.putInt("gunLevel", gunLevel);
+                editor.apply();
             }
         });
 
@@ -63,12 +73,17 @@ public class UpgradeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(orb<8){
-                    Toast.makeText(getApplicationContext(),"Não tem orb suficiente",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Não tem blue_orb suficiente",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 orb-=8;
                 bullet++;
                 textViewBullet.setText(String.valueOf(bullet));
+                textViewOrb.setText(String.valueOf(orb));
+
+                editor.putInt("blue_orb", orb);
+                editor.putInt("bullet", bullet);
+                editor.apply();
             }
         });
 

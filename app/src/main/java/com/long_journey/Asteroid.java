@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
-import java.lang.reflect.Type;
 import java.util.Random;
 
 import static com.long_journey.GameView.screenRatioX;
@@ -17,9 +16,9 @@ public class Asteroid {
     public int HP = 1;
     public boolean wasShot = true;
     public int x = 0, y, width, height, asteroidCounter = 1;
-    private Bitmap heart;
-    private Bitmap bullet;
-    private Bitmap gun;
+    private Bitmap red_orb;
+    private Bitmap blue_orb;
+    private Bitmap metal;
     public double Size;
     private boolean Reward = false;
     private int RewardType = 0;
@@ -30,23 +29,23 @@ public class Asteroid {
     private Random random = new Random();
 
     public Asteroid(Resources res, AsteroidSizes asteroidSizes) {
-        heart = BitmapFactory.decodeResource(res, R.drawable.heart);
-        bullet = BitmapFactory.decodeResource(res, R.drawable.bullet);
-        gun = BitmapFactory.decodeResource(res, R.drawable.gun);
+        red_orb = BitmapFactory.decodeResource(res, R.drawable.red_orb);
+        blue_orb = BitmapFactory.decodeResource(res, R.drawable.blue_orb);
+        metal = BitmapFactory.decodeResource(res, R.drawable.metal);
 
-        heart = Bitmap.createScaledBitmap(
-                heart, (int) (heart.getWidth() * screenRatioX * 0.1),
-                (int) (heart.getHeight() * screenRatioY * 0.1),
+        red_orb = Bitmap.createScaledBitmap(
+                red_orb, (int) (red_orb.getWidth() * screenRatioX * 2),
+                (int) (red_orb.getHeight() * screenRatioY * 2),
                 false
         );
-        bullet = Bitmap.createScaledBitmap(
-                bullet, (int) (bullet.getWidth() * screenRatioX * 0.3),
-                (int) (bullet.getHeight() * screenRatioY * 0.3),
+        blue_orb = Bitmap.createScaledBitmap(
+                blue_orb, (int) (blue_orb.getWidth() * screenRatioX * 2),
+                (int) (blue_orb.getHeight() * screenRatioY * 2),
                 false
         );
-        gun = Bitmap.createScaledBitmap(
-                gun, (int) (gun.getWidth() * screenRatioX * 3),
-                (int) (gun.getHeight() * screenRatioY * 3),
+        metal = Bitmap.createScaledBitmap(
+                metal, (int) (metal.getWidth() * screenRatioX * 0.8),
+                (int) (metal.getHeight() * screenRatioY * 0.8),
                 false
         );
 
@@ -58,11 +57,11 @@ public class Asteroid {
     public Bitmap getAsteroid () {
         if(isReward()){
             if(RewardType==1) {
-                return heart;
+                return red_orb;
             }else if(RewardType==2){
-                return gun;
+                return metal;
             }else{
-                return bullet;
+                return blue_orb;
             }
         }
 
@@ -146,8 +145,8 @@ public class Asteroid {
             boolean[] array = {true,false};
             int random = new Random().nextInt(array.length);
             Reward = array[random];
-            if(Reward==true) {
-                int[] _array = {1,2,2,3,3,3,3};
+            if(Reward) {
+                int[] _array = {1,2,3,3,3,3,3,3,3,3,3,3};
                 random = new Random().nextInt(_array.length);
                 RewardType = _array[random];
             }

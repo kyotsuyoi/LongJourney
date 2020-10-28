@@ -146,7 +146,7 @@ public class GameView extends SurfaceView implements Runnable {
 
             astronaut.bulletLimiter = settings.getInt("bullet",3);
             astronaut.GunLevel = settings.getInt("gun_level",1);
-            orb = settings.getInt("orb",0);
+            orb = settings.getInt("blue_orb",0);
             metal = settings.getInt("metal",0);
 
             asteroidSizes = new AsteroidSizes(getResources());
@@ -286,7 +286,7 @@ public class GameView extends SurfaceView implements Runnable {
         if (settings.getInt("high_score", 0) < score) {
             editor.putInt("high_score", score);
         }
-        editor.putInt("orb", orb);
+        editor.putInt("blue_orb", orb);
         editor.putInt("metal", metal);
         editor.apply();
     }
@@ -721,11 +721,9 @@ public class GameView extends SurfaceView implements Runnable {
                         }
                         score+=4;
                     }else if(asteroid.getRewardType()==2){
-                        astronaut.GunLevel++;
                         score+=2;
                         metal++;
                     }else if(asteroid.getRewardType()==3){
-                        astronaut.bulletLimiter++;
                         score+=2;
                         orb++;
                     }

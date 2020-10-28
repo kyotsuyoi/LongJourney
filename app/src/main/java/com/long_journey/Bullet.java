@@ -14,13 +14,13 @@ public class Bullet {
     private Bitmap bullet;
 
     public Bullet (Resources res) {
-        bullet = BitmapFactory.decodeResource(res, R.drawable.bullet);
+        bullet = BitmapFactory.decodeResource(res, R.drawable.blue_bullet);
 
         width = bullet.getWidth();
         height = bullet.getHeight();
 
-        width /= 4;
-        height /= 4;
+        width /= 1;
+        height /= 1;
 
         width = (int) (width * screenRatioX);
         height = (int) (height * screenRatioY);
