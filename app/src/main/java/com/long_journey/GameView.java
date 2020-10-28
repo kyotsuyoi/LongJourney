@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -43,8 +44,9 @@ public class GameView extends SurfaceView implements Runnable {
     private int backgroundSpeed = 2;
     private int WaitingTime = 200;
     private boolean isWaiting = true;
-    private int Wave = 1;
+    private int Wave = 10;
     private int SpeedBound=20;
+    private AsteroidSizes asteroidSizes;
 
     float[] x = new float[10]; //Position on the x axis of each finger
     float[] y = new float[10]; //Position on the y axis of each finger
@@ -139,6 +141,8 @@ public class GameView extends SurfaceView implements Runnable {
             if (!settings.getBoolean("mute", false)) {
                 soundPoolSOS.play(SOS_Sound, 1, 1, 0, 0, 1);
             }
+
+            asteroidSizes = new AsteroidSizes(getResources());
         }catch (Exception ignored){}
     }
 
@@ -161,8 +165,11 @@ public class GameView extends SurfaceView implements Runnable {
             WaveLevel++;
             MoreAsteroid();
             if(WaveLevel>8){
+                SpeedBound=40;
+            }else if(WaveLevel >= 5){
                 SpeedBound=30;
-                MoreAsteroid();
+            }else{
+                SpeedBound=20;
             }
         }
 
@@ -191,14 +198,15 @@ public class GameView extends SurfaceView implements Runnable {
                 canvas.drawBitmap(asteroid.getAsteroid(), asteroid.x, asteroid.y, paint);
             }
 
-            canvas.drawText(String.valueOf(score), screenX/2f, screenY/20f, paint);
+            canvas.drawText(String.valueOf("Pontos: "+score), screenX/2f, screenY/20f, paint);
             canvas.drawText("Bullets: "+bullets.size()+"/"+ astronaut.bulletLimiter, screenX/3f, screenY/20f, paint);
+            canvas.drawText("AQ: "+asteroids.size(), screenX/4f*3, screenY/20f, paint);
+            canvas.drawText("WL: "+ WaveLevel, screenX/4f*3, screenY/20f+20, paint);
 
             if (isGameOver) {
                 isPlaying = false;
                 canvas.drawBitmap(astronaut.getDead(), astronaut.x, astronaut.y, paint);
                 getHolder().unlockCanvasAndPost(canvas);
-                setHighScore();
                 waitBeforeExiting();
                 return;
             }
@@ -235,9 +243,19 @@ public class GameView extends SurfaceView implements Runnable {
                 }else if(Wave==5){
                     canvas.drawText("QUINTA ONDA", 20f, screenY / 2f, paintText);
                 }else if(Wave==6){
+                    canvas.drawText("SEXTA ONDA", 20f, screenY / 2f, paintText);
+                }else if(Wave==7){
+                    canvas.drawText("SETIMA ONDA", 20f, screenY / 2f, paintText);
+                }else if(Wave==8){
+                    canvas.drawText("OITAVA ONDA", 20f, screenY / 2f, paintText);
+                }else if(Wave==9){
+                    canvas.drawText("NONA ONDA", 20f, screenY / 2f, paintText);
+                }else if(Wave==10){
                     canvas.drawText("ONDA FINAL", 20f, screenY / 2f, paintText);
-                }else if(Wave>6){
-                    canvas.drawText("CONCLUÍDO", 20f, screenY / 2f, paintText);
+                }else if(Wave==11){
+                    canvas.drawText("DESTRUA O ULTRA ASTEROID", 20f, screenY / 2f, paintText);
+                }else{
+                    canvas.drawText("MISSÂO CONCLUÍDA", 20f, screenY / 2f, paintText);
                 }
             }
 
@@ -248,6 +266,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void waitBeforeExiting(){
         try {
+            setHighScore();
             Thread.sleep(3000);
             activity.finish();
         } catch (InterruptedException e) {
@@ -500,62 +519,108 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void MoreAsteroid(){
-        Asteroid new_asteroid = new Asteroid(getResources());
+        Asteroid new_asteroid = new Asteroid(getResources(), asteroidSizes);
         asteroids.add(new_asteroid);
         isMoreAsteroid=false;
     }
 
     private void AsteroidsLevel(int Level){
-        for(Asteroid asteroid : asteroids){
-            asteroid.setArrayAsteroidTypeLevel(Level);
-        }
+        asteroidSizes.setArrayAsteroidTypeLevel(Level);
     }
 
     private void CheckWave(){
         if(!isWaiting&&asteroids.size()==0) {
             if(Wave==1){
                 for (int i = 0; i < 5; i++) {
-                    Asteroid asteroid = new Asteroid(getResources());
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
                     asteroids.add(asteroid);
                 }
                 MoreAsteroidCounter=19;
             }else if(Wave==2){
+                AsteroidsLevel(Wave);
                 for (int i = 0; i < 6; i++) {
-                    Asteroid asteroid = new Asteroid(getResources());
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
                     asteroids.add(asteroid);
                 }
-                AsteroidsLevel(2);
                 MoreAsteroidCounter=19;
             }else if(Wave==3){
+                AsteroidsLevel(Wave);
                 for (int i = 0; i < 7; i++) {
-                    Asteroid asteroid = new Asteroid(getResources());
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
                     asteroids.add(asteroid);
                 }
-                AsteroidsLevel(3);
                 MoreAsteroidCounter=19;
             }else if(Wave==4){
+                AsteroidsLevel(Wave);
                 for (int i = 0; i < 8; i++) {
-                    Asteroid asteroid = new Asteroid(getResources());
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
                     asteroids.add(asteroid);
                 }
-                AsteroidsLevel(4);
                 MoreAsteroidCounter=24;
             }else if(Wave==5){
+                AsteroidsLevel(Wave);
                 for (int i = 0; i < 9; i++) {
-                    Asteroid asteroid = new Asteroid(getResources());
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
                     asteroids.add(asteroid);
                 }
-                AsteroidsLevel(5);
                 MoreAsteroidCounter=25;
-            }else if(Wave==6){
+            }else if(Wave==6) {
+                AsteroidsLevel(Wave);
                 for (int i = 0; i < 10; i++) {
-                    Asteroid asteroid = new Asteroid(getResources());
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
                     asteroids.add(asteroid);
                 }
-                AsteroidsLevel(6);
+                MoreAsteroidCounter = 30;
+            }else if(Wave==7){
+                AsteroidsLevel(Wave);
+                for (int i = 0; i < 10; i++) {
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
+                    asteroids.add(asteroid);
+                }
                 MoreAsteroidCounter=30;
-            }else if(Wave>6){
-                activity.finish();
+            }else if(Wave==8){
+                AsteroidsLevel(Wave);
+                for (int i = 0; i < 12; i++) {
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
+                    asteroids.add(asteroid);
+                }
+                MoreAsteroidCounter=30;
+            }else if(Wave==9){
+                AsteroidsLevel(Wave);
+                for (int i = 0; i < 13; i++) {
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
+                    asteroids.add(asteroid);
+                }
+                MoreAsteroidCounter=30;
+            }else if(Wave==10){
+                AsteroidsLevel(Wave);
+                for (int i = 0; i < 15; i++) {
+                    Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                    asteroid.Reset(SpeedBound,screenX,screenY);
+                    asteroids.add(asteroid);
+                }
+                MoreAsteroidCounter=30;
+            }else if(Wave==11){
+                WaveLevel=11;
+                AsteroidsLevel(Wave);
+                Asteroid asteroid = new Asteroid(getResources(), asteroidSizes);
+                asteroid.Reset(SpeedBound,screenX,screenY);
+                asteroid.speed=1;
+                asteroid.x=screenX;
+                asteroid.y=screenY/2 - asteroid.height/2;
+                asteroids.add(asteroid);
+                backgroundSpeed=1;
+            }else{
+                isGameOver=true;
             }
         }else{
             WaitingTime--;
@@ -597,6 +662,8 @@ public class GameView extends SurfaceView implements Runnable {
                         if (!asteroid.isReward()){
                             asteroid.x = -500;
                             asteroid.wasShot = true;
+                        }else{
+                            asteroid.speed = (int) (10 * screenRatioX);
                         }
                     }
                 }
@@ -615,21 +682,23 @@ public class GameView extends SurfaceView implements Runnable {
 
             if (asteroid.x + asteroid.width < 0) {
                 if (!asteroid.wasShot && !asteroid.isReward()) {
+                    if(asteroid.getAsteroidType()==4){
+                        isGameOver=true;
+                        return;
+                    }
                     score--;
                 }
 
                 if(!isWaiting) {
-                    int bound = (int) (SpeedBound * screenRatioX);
+                    /*int bound = (int) (SpeedBound * screenRatioX);
                     asteroid.speed = random.nextInt(bound);
 
                     if (asteroid.speed < 10 * screenRatioX)
                         asteroid.speed = (int) (10 * screenRatioX);
 
                     asteroid.x = screenX;
-                    asteroid.y = random.nextInt(screenY - asteroid.height);
-
-                    asteroid.wasShot = false;
-                    asteroid.Reset(getResources());
+                    asteroid.y = random.nextInt(screenY - asteroid.height);*/
+                    asteroid.Reset(SpeedBound,screenX,screenY);
                 }
             }
 
@@ -641,7 +710,7 @@ public class GameView extends SurfaceView implements Runnable {
                         if (astronaut.HP < 3) {
                             astronaut.HP++;
                         }
-                        score++;
+                        score+=4;
                     }else if(asteroid.getRewardType()==2){
                         astronaut.GunLevel++;
                         score+=2;
@@ -653,9 +722,13 @@ public class GameView extends SurfaceView implements Runnable {
                         soundPoolHeart.play(heartSound, 1, 1, 0, 0, 1);
                     }
                 }else if(astronaut.HP > 0){
+                    if(asteroid.getAsteroidType()==4){
+                        isGameOver=true;
+                        return;
+                    }
                     asteroid.x += astronaut.x+ astronaut.width+(astronaut.width/2);
                     asteroid.speed/=2;
-                    astronaut.setDamage();
+                    //astronaut.setDamage();
                 }else{
                     isGameOver = true;
                     return;

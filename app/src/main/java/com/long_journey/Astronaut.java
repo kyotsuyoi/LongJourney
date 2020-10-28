@@ -12,7 +12,7 @@ public class Astronaut {
 
     public int toShoot = 0;
     public int HP = 3;
-    public int GunLevel = 1;
+    public int GunLevel = 10;
     public boolean isCharge = false;
     public int chargedShootType = 0;
     public boolean isGoingUp, isGoingDown = false;
@@ -20,7 +20,7 @@ public class Astronaut {
     private Bitmap flight1, flight2, shoot1, shoot2, shoot3, shoot4, shoot5, dead;
     private GameView gameView;
     private boolean damage;
-    public int bulletLimiter = 3;
+    public int bulletLimiter = 30;
 
     public Astronaut(GameView gameView, int screenY, Resources res) {
         this.gameView = gameView;
