@@ -44,9 +44,11 @@ public class GameView extends SurfaceView implements Runnable {
     private int backgroundSpeed = 2;
     private int WaitingTime = 200;
     private boolean isWaiting = true;
-    private int Wave = 10;
+    private int Wave = 1;
     private int SpeedBound=20;
     private AsteroidSizes asteroidSizes;
+
+    private int orb, metal;
 
     float[] x = new float[10]; //Position on the x axis of each finger
     float[] y = new float[10]; //Position on the y axis of each finger
@@ -141,6 +143,11 @@ public class GameView extends SurfaceView implements Runnable {
             if (!settings.getBoolean("mute", false)) {
                 soundPoolSOS.play(SOS_Sound, 1, 1, 0, 0, 1);
             }
+
+            astronaut.bulletLimiter = settings.getInt("bullet",3);
+            astronaut.GunLevel = settings.getInt("gun_level",1);
+            orb = settings.getInt("orb",0);
+            metal = settings.getInt("metal",0);
 
             asteroidSizes = new AsteroidSizes(getResources());
         }catch (Exception ignored){}
@@ -275,11 +282,13 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void setHighScore(){
+        SharedPreferences.Editor editor = settings.edit();
         if (settings.getInt("high_score", 0) < score) {
-            SharedPreferences.Editor editor = settings.edit();
             editor.putInt("high_score", score);
-            editor.apply();
         }
+        editor.putInt("orb", orb);
+        editor.putInt("metal", metal);
+        editor.apply();
     }
 
     private void Sleep(){
@@ -714,9 +723,11 @@ public class GameView extends SurfaceView implements Runnable {
                     }else if(asteroid.getRewardType()==2){
                         astronaut.GunLevel++;
                         score+=2;
+                        metal++;
                     }else if(asteroid.getRewardType()==3){
                         astronaut.bulletLimiter++;
                         score+=2;
+                        orb++;
                     }
                     if (!settings.getBoolean("mute", false)) {
                         soundPoolHeart.play(heartSound, 1, 1, 0, 0, 1);
@@ -728,7 +739,7 @@ public class GameView extends SurfaceView implements Runnable {
                     }
                     asteroid.x += astronaut.x+ astronaut.width+(astronaut.width/2);
                     asteroid.speed/=2;
-                    //astronaut.setDamage();
+                    astronaut.setDamage();
                 }else{
                     isGameOver = true;
                     return;

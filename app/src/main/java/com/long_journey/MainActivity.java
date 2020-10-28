@@ -87,11 +87,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         findViewById(R.id.button_controls).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ControlsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.button_upgrade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, UpgradeActivity.class);
                 startActivity(intent);
             }
         });
