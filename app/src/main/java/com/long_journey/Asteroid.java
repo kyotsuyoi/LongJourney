@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
+import java.lang.reflect.Type;
 import java.util.Random;
 
 import static com.long_journey.GameView.screenRatioX;
@@ -33,6 +34,7 @@ public class Asteroid {
         blue_orb = BitmapFactory.decodeResource(res, R.drawable.blue_orb);
         metal = BitmapFactory.decodeResource(res, R.drawable.metal);
 
+        
         red_orb = Bitmap.createScaledBitmap(
                 red_orb, (int) (red_orb.getWidth() * screenRatioX * 2),
                 (int) (red_orb.getHeight() * screenRatioY * 2),
@@ -44,8 +46,8 @@ public class Asteroid {
                 false
         );
         metal = Bitmap.createScaledBitmap(
-                metal, (int) (metal.getWidth() * screenRatioX * 0.8),
-                (int) (metal.getHeight() * screenRatioY * 0.8),
+                metal, (int) (metal.getWidth() * screenRatioX * 0.6),
+                (int) (metal.getHeight() * screenRatioY * 0.6),
                 false
         );
 
@@ -141,14 +143,50 @@ public class Asteroid {
     }
 
     public void setRandomReward(){
+        boolean[] array;
+        int[] _array;
         if(Size == 0.6){
-            boolean[] array = {true,false};
-            int random = new Random().nextInt(array.length);
-            Reward = array[random];
-            if(Reward) {
-                int[] _array = {1,2,3,3,3,3,3,3,3,3,3,3};
-                random = new Random().nextInt(_array.length);
-                RewardType = _array[random];
+            if(AsteroidType==1) {
+                array = new boolean[]{true, false, false, false, false};
+                int random = new Random().nextInt(array.length);
+                Reward = array[random];
+                if (Reward) {
+                    _array = new int[]{2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+                    random = new Random().nextInt(_array.length);
+                    RewardType = _array[random];
+                }
+            }
+            if(AsteroidType==2) {
+                array = new boolean[]{true, false, false};
+                int random = new Random().nextInt(array.length);
+                Reward = array[random];
+                if (Reward) {
+                    _array = new int[]{1, 2, 3, 3, 3, 3};
+                    random = new Random().nextInt(_array.length);
+                    RewardType = _array[random];
+                }
+            }
+            if(AsteroidType==3) {
+                array = new boolean[]{true, false};
+                int random = new Random().nextInt(array.length);
+                Reward = array[random];
+                if (Reward) {
+                    _array = new int[]{1, 2};
+                    random = new Random().nextInt(_array.length);
+                    RewardType = _array[random];
+                }
+            }
+        }
+        if(Size == 0.4){
+            if(AsteroidType<10) {
+                array = new boolean[]{true, false};
+                int random = new Random().nextInt(array.length);
+                Reward = array[random];
+                if (Reward) {
+                    _array = new int[]{3};
+                    random = new Random().nextInt(_array.length);
+                    RewardType = _array[random];
+                }
             }
         }
     }
@@ -186,7 +224,7 @@ public class Asteroid {
             }
         }
         if(AsteroidType == 4){
-            HP = 500;
+            HP = 1200;
         }
     }
 

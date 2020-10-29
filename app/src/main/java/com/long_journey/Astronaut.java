@@ -11,12 +11,12 @@ import static com.long_journey.GameView.screenRatioY;
 public class Astronaut {
 
     public int toShoot = 0;
-    public int HP = 3;
+    public int HP = 0;
     public int GunLevel = 10;
     public boolean isCharge = false;
     public int chargedShootType = 0;
     public boolean isGoingUp, isGoingDown = false;
-    public int x, y, width, height, dashCounter = 0, shootCounter = 1;
+    public int x, y, width, height, dashCounter = 0, shootCounter = 1, damageCounter=0;
     private Bitmap flight1, flight2, shoot1, shoot2, shoot3, shoot4, shoot5, dead;
     private GameView gameView;
     private boolean damage;
@@ -61,11 +61,16 @@ public class Astronaut {
 
     public Bitmap getFlight () {
         if(damage){
-            damage=false;
+            if(damageCounter>8){
+                damage=false;
+                damageCounter=0;
+            }else{
+                damageCounter++;
+            }
             return dead;
         }
 
-        if (toShoot != 0) {
+        if (toShoot != 0 && toShoot <= bulletLimiter) {
             if (shootCounter == 1) {
                 shootCounter++;
                 return shoot1;
@@ -85,12 +90,13 @@ public class Astronaut {
 
             shootCounter = 1;
             toShoot--;
-            if(isCharge) {
+            if(isCharge && bulletLimiter > 3) {
                 if(chargedShootType == 0) {
-                    gameView.newTripleBullet();
+                    gameView.newShotGunBullet();
                 }else if(chargedShootType == 1){
                     gameView.newPierceBullet();
                 }
+                bulletLimiter--;
                 isCharge=false;
             }else{
                 gameView.newBullet();
@@ -116,9 +122,38 @@ public class Astronaut {
         return dead;
     }
 
-    public void setDamage() {
+    public void setDamage(int AsteroidType, double Size) {
         damage=true;
-        HP--;
+        if (AsteroidType==1){
+            if(Size==0.2 || Size==0.3){
+                HP--;
+            }else if(Size==0.4){
+                HP-=2;
+            }else if(Size==0.6){
+                HP-=3;
+            }
+        }
+        if (AsteroidType==2){
+            if(Size==0.2 || Size==0.3){
+                HP-=2;
+            }else if(Size==0.4){
+                HP-=4;
+            }else if(Size==0.6){
+                HP-=6;
+            }
+        }
+        if (AsteroidType==3){
+            if(Size==0.2 || Size==0.3){
+                HP-=3;
+            }else if(Size==0.4){
+                HP-=6;
+            }else if(Size==0.6){
+                HP-=8;
+            }
+        }
+        if (AsteroidType==4){
+            HP=0;
+        }
     }
 
 }

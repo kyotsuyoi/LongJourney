@@ -29,7 +29,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Astronaut astronaut;
     private ArrayList<Asteroid> asteroids = new ArrayList<>();
     private List<Bullet> bullets;
-    private Random random;
+    //private Random random;
     private SoundPool soundPoolShot, soundPoolExplosion,soundPoolCharge, soundPoolHeart, soundPoolPierceShot, soundPoolTripleShot, soundPoolSOS;
     private int shootSound, explosionSound, chargeSound, heartSound, pierceShotSound, tripleShotSound, SOS_Sound;
     private GameActivity activity;
@@ -48,7 +48,7 @@ public class GameView extends SurfaceView implements Runnable {
     private int SpeedBound=20;
     private AsteroidSizes asteroidSizes;
 
-    private int orb, metal;
+    private int blueOrb, redOrb, metal;
 
     float[] x = new float[10]; //Position on the x axis of each finger
     float[] y = new float[10]; //Position on the y axis of each finger
@@ -135,18 +135,19 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setColor(Color.WHITE);
 
             paintText = new Paint();
-            paintText.setTextSize(60);
-            paintText.setAlpha(20);
+            paintText.setTextSize((screenX/100f)*6);
             paintText.setColor(Color.WHITE);
 
-            random = new Random();
+            //random = new Random();
             if (!settings.getBoolean("mute", false)) {
                 soundPoolSOS.play(SOS_Sound, 1, 1, 0, 0, 1);
             }
 
             astronaut.bulletLimiter = settings.getInt("bullet",3);
             astronaut.GunLevel = settings.getInt("gun_level",1);
-            orb = settings.getInt("blue_orb",0);
+            astronaut.HP = settings.getInt("armor",1);
+            blueOrb = settings.getInt("blue_orb",0);
+            redOrb = settings.getInt("red_orb",0);
             metal = settings.getInt("metal",0);
 
             asteroidSizes = new AsteroidSizes(getResources());
@@ -198,17 +199,20 @@ public class GameView extends SurfaceView implements Runnable {
     private void Draw() {
         if (getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
-            canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
-            canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
+            canvas.drawBitmap(background2.getBackground(), background2.x, background2.y, paint);
+            canvas.drawBitmap(background1.getBackground(), background1.x, background1.y, paint);
 
             for (Asteroid asteroid : asteroids) {
                 canvas.drawBitmap(asteroid.getAsteroid(), asteroid.x, asteroid.y, paint);
             }
 
-            canvas.drawText(String.valueOf("Pontos: "+score), screenX/2f, screenY/20f, paint);
+            canvas.drawText(("Pontos: "+score), screenX/2f, screenY/20f, paint);
             canvas.drawText("Bullets: "+bullets.size()+"/"+ astronaut.bulletLimiter, screenX/3f, screenY/20f, paint);
             canvas.drawText("AQ: "+asteroids.size(), screenX/4f*3, screenY/20f, paint);
             canvas.drawText("WL: "+ WaveLevel, screenX/4f*3, screenY/20f+20, paint);
+
+            canvas.drawBitmap(displayHP.Heart, screenX - ((screenX/100)*4), screenY/100f, paint);
+            canvas.drawText(astronaut.HP+"/"+settings.getInt("armor",1), screenX - ((screenX/100f)*10), screenY/20f, paint);
 
             if (isGameOver) {
                 isPlaying = false;
@@ -217,23 +221,8 @@ public class GameView extends SurfaceView implements Runnable {
                 waitBeforeExiting();
                 return;
             }
-
+            paintText.setAlpha(100);
             canvas.drawBitmap(astronaut.getFlight(), astronaut.x, astronaut.y, paint);
-
-            switch (astronaut.HP){
-                case 1:
-                    canvas.drawBitmap(displayHP.Heart, screenX - 50, 10, paint);
-                    break;
-                case 2:
-                    canvas.drawBitmap(displayHP.Heart, screenX - 50, 10, paint);
-                    canvas.drawBitmap(displayHP.Heart, screenX - 100, 10, paint);
-                    break;
-                case 3:
-                    canvas.drawBitmap(displayHP.Heart, screenX - 50, 10, paint);
-                    canvas.drawBitmap(displayHP.Heart, screenX - 100, 10, paint);
-                    canvas.drawBitmap(displayHP.Heart, screenX - 150, 10, paint);
-                    break;
-            }
 
             for (Bullet bullet : bullets)
                 canvas.drawBitmap(bullet.getBullet(), bullet.x, bullet.y, paint);
@@ -286,7 +275,8 @@ public class GameView extends SurfaceView implements Runnable {
         if (settings.getInt("high_score", 0) < score) {
             editor.putInt("high_score", score);
         }
-        editor.putInt("blue_orb", orb);
+        editor.putInt("blue_orb", blueOrb);
+        editor.putInt("red_orb", redOrb);
         editor.putInt("metal", metal);
         editor.apply();
     }
@@ -396,77 +386,89 @@ public class GameView extends SurfaceView implements Runnable {
         if(astronaut.GunLevel==1) {
             Bullet bullet = new Bullet(getResources());
             bullet.x = astronaut.x + astronaut.width;
-            bullet.y = astronaut.y + (astronaut.height / 4);
+            bullet.y = astronaut.y + (astronaut.height / 3);
             bullets.add(bullet);
         }else if(astronaut.GunLevel==2){
             Bullet bullet1 = new Bullet(getResources());
             bullet1.x = astronaut.x + astronaut.width;
-            bullet1.y = astronaut.y + (astronaut.height / 10);
+            bullet1.y = astronaut.y + ((astronaut.height / 3)/2);
             bullets.add(bullet1);
 
             Bullet bullet2 = new Bullet(getResources());
             bullet2.x = astronaut.x + astronaut.width;
-            bullet2.y = astronaut.y + (astronaut.height / 2);
+            bullet2.y = astronaut.y + (((astronaut.height / 3)+((astronaut.height / 3)/2)));
             bullets.add(bullet2);
         }else if(astronaut.GunLevel>=3){
             Bullet bullet1 = new Bullet(getResources());
             bullet1.x = astronaut.x + astronaut.width;
-            bullet1.y = astronaut.y + (astronaut.height / 70);
+            bullet1.y = astronaut.y + (astronaut.height / 3)/2;
             bullets.add(bullet1);
-
-            Bullet bullet3 = new Bullet(getResources());
-            bullet3.x = astronaut.x + astronaut.width;
-            bullet3.y = astronaut.y + (astronaut.height / 4);
-            bullets.add(bullet3);
 
             Bullet bullet2 = new Bullet(getResources());
             bullet2.x = astronaut.x + astronaut.width;
-            bullet2.y = astronaut.y + (astronaut.height / 2);
+            bullet2.y = astronaut.y + (astronaut.height / 3);
             bullets.add(bullet2);
+
+            Bullet bullet3 = new Bullet(getResources());
+            bullet3.x = astronaut.x + astronaut.width;
+            bullet3.y = astronaut.y + (((astronaut.height / 3)+((astronaut.height / 3)/2)));
+            bullets.add(bullet3);
         }
     }
 
-    public void newTripleBullet() {
+    public void newShotGunBullet() {
+
         if (!settings.getBoolean("mute", false)) {
             soundPoolTripleShot.play(tripleShotSound, 1, 1, 0, 0, 1);
         }
         if(astronaut.GunLevel==1) {
-            setNewTripleBullet(0);
+            setNewShotGunBullet(0);
         }else if(astronaut.GunLevel==2){
-            setNewTripleBullet(0);
-            setNewTripleBullet(10);
+            setNewShotGunBullet(0);
+            setNewShotGunBullet(astronaut.width/4);
         }else if(astronaut.GunLevel>=3){
-            setNewTripleBullet(0);
-            setNewTripleBullet(10);
-            setNewTripleBullet(30);
+            setNewShotGunBullet(0);
+            setNewShotGunBullet(astronaut.width/4);
+            setNewShotGunBullet((astronaut.width/4)*2);
         }
     }
 
-    private void setNewTripleBullet(int x){
+    private void setNewShotGunBullet(int x){
+
         Bullet bullet1 = new Bullet(getResources());
-        bullet1.x = astronaut.x + astronaut.width+x+10;
-        bullet1.y = astronaut.y + (astronaut.height / 4);
+        bullet1.x = astronaut.x + astronaut.width+x;
+        bullet1.y = astronaut.y - (astronaut.height / 3)/2;
         bullets.add(bullet1);
 
         Bullet bullet2 = new Bullet(getResources());
-        bullet2.x = astronaut.x + astronaut.width+x+5;
-        bullet2.y = astronaut.y + (astronaut.height / 2);
+        bullet2.x = astronaut.x + (astronaut.width+astronaut.width/8)+x;
+        bullet2.y = astronaut.y;
         bullets.add(bullet2);
 
         Bullet bullet3 = new Bullet(getResources());
-        bullet3.x = astronaut.x + astronaut.width+x+5;
-        bullet3.y = astronaut.y;
+        bullet3.x = astronaut.x + (astronaut.width+astronaut.width/4)+x;
+        bullet3.y = astronaut.y + (astronaut.height / 3)/2;
         bullets.add(bullet3);
 
         Bullet bullet4 = new Bullet(getResources());
-        bullet4.x = astronaut.x + astronaut.width+x;
-        bullet4.y = bullet1.y+55;
+        bullet4.x = astronaut.x + (astronaut.width+astronaut.width/3)+x;
+        bullet4.y = astronaut.y + (astronaut.height / 3);
         bullets.add(bullet4);
 
         Bullet bullet5 = new Bullet(getResources());
-        bullet5.x = astronaut.x + astronaut.width+x;
-        bullet5.y = bullet1.y-55;
+        bullet5.x = astronaut.x + (astronaut.width+astronaut.width/4)+x;
+        bullet5.y = astronaut.y + (((astronaut.height / 3)+((astronaut.height / 3)/2)));
         bullets.add(bullet5);
+
+        Bullet bullet6 = new Bullet(getResources());
+        bullet6.x = astronaut.x + (astronaut.width+astronaut.width/8)+x;
+        bullet6.y = astronaut.y + ((astronaut.height / 3)*2);
+        bullets.add(bullet6);
+
+        Bullet bullet7 = new Bullet(getResources());
+        bullet7.x = astronaut.x + astronaut.width+x;
+        bullet7.y = astronaut.y + ((astronaut.height / 3)*2)+((astronaut.height / 3)/2);
+        bullets.add(bullet7);
     }
 
     public void newPierceBullet() {
@@ -482,10 +484,16 @@ public class GameView extends SurfaceView implements Runnable {
             setNewPierceBullet(count+=sum);
             setNewPierceBullet(count+=sum);
             setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
             setNewPierceBullet(count +sum);
         }else if(astronaut.GunLevel==2){
             int sum=6;
             setNewPierceBullet(count);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
             setNewPierceBullet(count+=sum);
             setNewPierceBullet(count+=sum);
             setNewPierceBullet(count+=sum);
@@ -516,6 +524,20 @@ public class GameView extends SurfaceView implements Runnable {
             setNewPierceBullet(count+=sum);
             setNewPierceBullet(count+=sum);
             setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
+            setNewPierceBullet(count+=sum);
             setNewPierceBullet(count +sum);
         }
     }
@@ -523,7 +545,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void setNewPierceBullet(int x){
         Bullet bullet = new Bullet(getResources());
         bullet.x = astronaut.x + astronaut.width + x;
-        bullet.y = astronaut.y + (astronaut.height / 4);
+        bullet.y = astronaut.y + (astronaut.height / 3);
         bullets.add(bullet);
     }
 
@@ -667,6 +689,9 @@ public class GameView extends SurfaceView implements Runnable {
                         if(asteroid.Size == 0.6){
                             asteroid.setRandomReward();
                         }
+                        if(asteroid.Size == 0.4 && asteroid.getAsteroidType() == 3){
+                            asteroid.setRandomReward();
+                        }
 
                         if (!asteroid.isReward()){
                             asteroid.x = -500;
@@ -716,31 +741,31 @@ public class GameView extends SurfaceView implements Runnable {
                     asteroid.x = -500;
                     asteroid.wasShot = true;
                     if(asteroid.getRewardType()==1) {
-                        if (astronaut.HP < 3) {
-                            astronaut.HP++;
-                        }
-                        score+=4;
+                        redOrb++;
+                        score+=10;
                     }else if(asteroid.getRewardType()==2){
-                        score+=2;
                         metal++;
+                        score+=5;
                     }else if(asteroid.getRewardType()==3){
+                        blueOrb++;
                         score+=2;
-                        orb++;
                     }
                     if (!settings.getBoolean("mute", false)) {
                         soundPoolHeart.play(heartSound, 1, 1, 0, 0, 1);
                     }
-                }else if(astronaut.HP > 0){
-                    if(asteroid.getAsteroidType()==4){
+                }else{
+                    astronaut.setDamage(asteroid.getAsteroidType(),asteroid.Size);
+                    if(astronaut.HP > 1){
+                    /*if(asteroid.getAsteroidType()==4){
                         isGameOver=true;
                         return;
+                    }*/
+                        asteroid.x += astronaut.x+ astronaut.width+(astronaut.width/2);
+                        asteroid.speed/=2;
+                    }else{
+                        isGameOver = true;
+                        return;
                     }
-                    asteroid.x += astronaut.x+ astronaut.width+(astronaut.width/2);
-                    asteroid.speed/=2;
-                    astronaut.setDamage();
-                }else{
-                    isGameOver = true;
-                    return;
                 }
             }
 
@@ -761,11 +786,11 @@ public class GameView extends SurfaceView implements Runnable {
         background1.x -= backgroundSpeed;
         background2.x -= backgroundSpeed;
 
-        if (background1.x + background1.background.getWidth() < 0) {
+        if (background1.x + background1.getBackground().getWidth() < 0) {
             background1.x = screenX;
         }
 
-        if (background2.x + background2.background.getWidth() < 0) {
+        if (background2.x + background2.getBackground().getWidth() < 0) {
             background2.x = screenX;
         }
     }

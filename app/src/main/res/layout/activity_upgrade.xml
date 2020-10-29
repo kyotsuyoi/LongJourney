@@ -10,7 +10,7 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/stars_background"
+        android:background="@drawable/back_test02"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -18,29 +18,48 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/textView10"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:text="Nível da arma:"
-        android:textSize="30sp"
-        android:textColor="@color/colorAccent"
+        android:background="@drawable/heart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView_RedOrb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="red_orb"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView4" />
+
+    <ImageView
+        android:id="@+id/textView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/gun"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <ImageView
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:text="Munição:"
-        android:textSize="30sp"
-        android:textColor="@color/colorAccent"
+        android:background="@drawable/blue_bullet"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -52,8 +71,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:text="Gun Level"
-        android:textSize="30sp"
-        android:textColor="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,32 +85,57 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:text="Bullet"
-        android:textSize="30sp"
-        android:textColor="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView3"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/textView_GunLevel" />
+
+    <TextView
+        android:id="@+id/textView_Armor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:text="armor"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView10"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/textView_Bullet" />
 
     <Button
         android:id="@+id/button_GunLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="16dp"
-        android:text="Aumentar nível da arma"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        android:background="@color/colorAccent"
+        android:text="+ arma"
+        app:layout_constraintStart_toEndOf="@+id/textView_GunLevel"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_Bullet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Aumentar quantidade de munição"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        android:text="+ munição"
+        android:background="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@+id/button_GunLevel"
         app:layout_constraintTop_toBottomOf="@+id/button_GunLevel" />
+
+    <Button
+        android:id="@+id/button_Armor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="+ armadura"
+        android:background="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@+id/button_Bullet"
+        app:layout_constraintTop_toBottomOf="@+id/button_Bullet" />
 
     <TextView
         android:id="@+id/textView5"
@@ -98,8 +143,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:textColor="@color/colorAccent"
-        android:text="precisa de 10 orbs e 1 metal rochoso"
+        android:text="precisa de 10 orbs azuis e 1 metal rochoso"
+        android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="@+id/button_GunLevel"
         app:layout_constraintStart_toEndOf="@+id/button_GunLevel"
         app:layout_constraintTop_toTopOf="@+id/button_GunLevel" />
@@ -110,11 +155,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="precisa de 8 orbs"
-        android:textColor="@color/colorAccent"
+        android:text="precisa de 8 orbs azuis"
+        android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="@+id/button_Bullet"
         app:layout_constraintStart_toEndOf="@+id/button_Bullet"
         app:layout_constraintTop_toTopOf="@+id/button_Bullet" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="precisa de 10 orbs vermelhos"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toBottomOf="@+id/button_Armor"
+        app:layout_constraintStart_toEndOf="@+id/button_Armor"
+        app:layout_constraintTop_toTopOf="@+id/button_Armor" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
@@ -138,38 +195,48 @@
             android:background="@drawable/_return"/>
     </androidx.cardview.widget.CardView>
 
-    <TextView
+    <ImageView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Orbs:"
-        android:textColor="@color/colorAccent"
+        android:background="@drawable/blue_orb"
         app:layout_constraintBottom_toTopOf="@+id/textView8"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView8"
+    <ImageView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Metal Rochoso:"
-        android:textColor="@color/colorAccent"
+        android:background="@drawable/red_orb"
+        app:layout_constraintBottom_toTopOf="@+id/textView7"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/textView8"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/metal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView_Orb"
+        android:id="@+id/textView_BlueOrb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="orbs"
-        android:textColor="@color/colorAccent"
+        android:text="blue_orb"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView7"
         app:layout_constraintStart_toEndOf="@+id/textView7" />
 
@@ -180,7 +247,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:text="metal"
-        android:textColor="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/textView8" />
 
