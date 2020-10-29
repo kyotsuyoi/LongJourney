@@ -211,7 +211,7 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawText("AQ: "+asteroids.size(), screenX/4f*3, screenY/20f, paint);
             canvas.drawText("WL: "+ WaveLevel, screenX/4f*3, screenY/20f+20, paint);
 
-            canvas.drawBitmap(displayHP.Heart, screenX - ((screenX/100)*4), screenY/100f, paint);
+            canvas.drawBitmap(displayHP.Heart, screenX - ((screenX/100f)*4), screenY/100f, paint);
             canvas.drawText(astronaut.HP+"/"+settings.getInt("armor",1), screenX - ((screenX/100f)*10), screenY/20f, paint);
 
             if (isGameOver) {
