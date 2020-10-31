@@ -25,12 +25,12 @@ public class GameView extends SurfaceView implements Runnable {
     private boolean isPlaying, isGameOver = false;
     private int screenX, screenY, score = 0;
     public static float screenRatioX, screenRatioY;
-    private Paint paint, paintText;
+    private Paint paint, paintText, paintAstronaut;
     private Astronaut astronaut;
     private ArrayList<Asteroid> asteroids = new ArrayList<>();
     private List<Bullet> bullets;
-    private SoundPool soundPoolShot, soundPoolExplosion,soundPoolCharge, soundPoolHeart, soundPoolPierceShot, soundPoolTripleShot, soundPoolSOS;
-    private int shootSound, explosionSound, chargeSound, heartSound, pierceShotSound, tripleShotSound, SOS_Sound;
+    private SoundPool soundPoolShot, soundPoolHit,soundPoolCharge, soundPoolHeart, soundPoolPierceShot, soundPoolTripleShot, soundPoolSOS;
+    private int shootSound, hitSound, chargeSound, heartSound, pierceShotSound, tripleShotSound, SOS_Sound;
     private GameActivity activity;
     private Background background1, background2;
     private HealthPoint displayHP;
@@ -68,7 +68,7 @@ public class GameView extends SurfaceView implements Runnable {
                 soundPoolShot = new SoundPool.Builder()
                         .setAudioAttributes(audioAttributes)
                         .build();
-                soundPoolExplosion = new SoundPool.Builder()
+                soundPoolHit = new SoundPool.Builder()
                         .setAudioAttributes(audioAttributes)
                         .build();
                 soundPoolCharge = new SoundPool.Builder()
@@ -88,7 +88,7 @@ public class GameView extends SurfaceView implements Runnable {
                         .build();
             }else{
                 soundPoolShot = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-                soundPoolExplosion = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+                soundPoolHit = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
                 soundPoolCharge = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
                 soundPoolHeart = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
                 soundPoolPierceShot = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
@@ -97,7 +97,7 @@ public class GameView extends SurfaceView implements Runnable {
             }
 
             shootSound = soundPoolShot.load(activity, R.raw.shot, 1);
-            explosionSound = soundPoolExplosion.load(activity, R.raw.explosion, 1);
+            hitSound = soundPoolHit.load(activity, R.raw.hit, 1);
             chargeSound = soundPoolCharge.load(activity, R.raw.charge, 1);
             heartSound = soundPoolHeart.load(activity, R.raw.heart, 1);
             pierceShotSound = soundPoolPierceShot.load(activity, R.raw.pierce_shot, 1);
@@ -137,6 +137,8 @@ public class GameView extends SurfaceView implements Runnable {
             paintText.setTextSize((screenX/100f)*6);
             paintText.setColor(Color.WHITE);
 
+            paintAstronaut = new Paint();
+
             //random = new Random();
             if (!settings.getBoolean("mute", false)) {
                 soundPoolSOS.play(SOS_Sound, 1, 1, 0, 0, 1);
@@ -167,6 +169,11 @@ public class GameView extends SurfaceView implements Runnable {
         BackgroundMovement();
         AstronautMovement();
         BulletIntersects();
+        if (astronaut.getEtherealTime()==0){
+            astronaut.isEthereal=false;
+        }else{
+            astronaut.isEthereal=true;
+        }
 
         if(isMoreAsteroid&&!isWaiting){
             WaveLevel++;
@@ -221,7 +228,13 @@ public class GameView extends SurfaceView implements Runnable {
                 return;
             }
             paintText.setAlpha(100);
-            canvas.drawBitmap(astronaut.getFlight(), astronaut.x, astronaut.y, paint);
+
+            if(astronaut.isEthereal){
+                paintAstronaut.setAlpha(80);
+            }else{
+                paintAstronaut.setAlpha(200);
+            }
+            canvas.drawBitmap(astronaut.getFlight(), astronaut.x, astronaut.y, paintAstronaut);
 
             for (Bullet bullet : bullets)
                 canvas.drawBitmap(bullet.getBullet(), bullet.x, bullet.y, paint);
@@ -754,14 +767,20 @@ public class GameView extends SurfaceView implements Runnable {
                         soundPoolHeart.play(heartSound, 1, 1, 0, 0, 1);
                     }
                 }else{
-                    astronaut.setDamage(asteroid.getAsteroidType(),asteroid.Size);
-                    if(astronaut.HP > 1){
+                    if(!astronaut.isEthereal) {
+                        astronaut.setDamage(asteroid.getAsteroidType(), asteroid.Size);
+                        astronaut.setEtherealTime(30);
+                        if (!settings.getBoolean("mute", false)) {
+                            soundPoolHit.play(hitSound, 1, 1, 0, 0, 1);
+                        }
+                    }
+                    if(astronaut.HP > 0){
                     /*if(asteroid.getAsteroidType()==4){
                         isGameOver=true;
                         return;
                     }*/
-                        asteroid.x += astronaut.x+ astronaut.width+(astronaut.width/2);
-                        asteroid.speed/=2;
+                        //asteroid.x += astronaut.x+ astronaut.width+(astronaut.width/2);
+                        //asteroid.speed/=2;
                     }else{
                         isGameOver = true;
                         return;

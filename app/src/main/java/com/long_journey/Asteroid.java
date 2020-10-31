@@ -182,7 +182,7 @@ public class Asteroid {
                 int random = new Random().nextInt(array.length);
                 Reward = array[random];
                 if (Reward) {
-                    _array = new int[]{2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+                    _array = new int[]{2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
                     random = new Random().nextInt(_array.length);
                     RewardType = _array[random];
                 }

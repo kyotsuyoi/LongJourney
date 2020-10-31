@@ -167,7 +167,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="precisa de 10 orbs vermelhos"
+        android:text="precisa de 10 orbs vermelhos e 10 metais"
         android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="@+id/button_Armor"
         app:layout_constraintStart_toEndOf="@+id/button_Armor"

@@ -136,16 +136,23 @@ public class UpgradeActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Não tem Orb Vermelho suficiente",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(metal<10){
+                    Toast.makeText(getApplicationContext(),"Não tem metal rochoso suficiente",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(armor>=99){
                     Toast.makeText(getApplicationContext(),"Armadura está no máximo",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 redOrb-=10;
+                metal-=10;
                 armor++;
                 textViewRedOrb.setText(String.valueOf(redOrb));
+                textViewMetal.setText(String.valueOf(metal));
                 textViewArmor.setText(String.valueOf(armor));
 
                 editor.putInt("red_orb", redOrb);
+                editor.putInt("metal", metal);
                 editor.putInt("armor", armor);
                 editor.apply();
                 if (!settings.getBoolean("mute", false)) {

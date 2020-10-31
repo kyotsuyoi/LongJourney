@@ -21,6 +21,8 @@ public class Astronaut {
     private GameView gameView;
     private boolean damage;
     public int bulletLimiter = 30;
+    public boolean isEthereal = false;
+    private int etherealTime = 0;
 
     public Astronaut(GameView gameView, int screenY, Resources res) {
         this.gameView = gameView;
@@ -169,6 +171,19 @@ public class Astronaut {
         if (AsteroidType==4){
             HP=0;
         }
+        if(HP<0){
+            HP=0;
+        }
     }
 
+    public int getEtherealTime(){
+        if(etherealTime>0){
+            etherealTime--;
+        }
+        return etherealTime;
+    }
+
+    public void setEtherealTime(int etherealTime) {
+        this.etherealTime = etherealTime;
+    }
 }
