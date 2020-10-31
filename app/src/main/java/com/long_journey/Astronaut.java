@@ -17,7 +17,7 @@ public class Astronaut {
     public int chargedShootType = 0;
     public boolean isGoingUp, isGoingDown = false;
     public int x, y, width, height, dashCounter = 0, shootCounter = 1, damageCounter=0;
-    private Bitmap flight1, flight2, shoot1, shoot2, shoot3, shoot4, shoot5, dead;
+    private Bitmap astronaut1, astronaut2, astronautUP, astronautDown, shoot1, shoot2, shoot3, shoot4, shoot5, damage1, damage2;
     private GameView gameView;
     private boolean damage;
     public int bulletLimiter = 30;
@@ -25,26 +25,30 @@ public class Astronaut {
     public Astronaut(GameView gameView, int screenY, Resources res) {
         this.gameView = gameView;
 
-        flight1 = BitmapFactory.decodeResource(res, R.drawable.fly1);
-        flight2 = BitmapFactory.decodeResource(res, R.drawable.fly2);
+        astronaut1 = BitmapFactory.decodeResource(res, R.drawable.astronaut);
+        astronaut2 = BitmapFactory.decodeResource(res, R.drawable.astronaut);
+        astronautUP = BitmapFactory.decodeResource(res, R.drawable.astronaut_up);
+        astronautDown = BitmapFactory.decodeResource(res, R.drawable.astronaut_down);
 
-        width = flight1.getWidth();
-        height = flight1.getHeight();
+        width = astronaut1.getWidth();
+        height = astronaut1.getHeight();
 
-        width *= 2;
-        height *= 2;
+        width /= 2;
+        height /= 2;
 
         width = (int) (width * screenRatioX);
         height = (int) (height * screenRatioY);
 
-        flight1 = Bitmap.createScaledBitmap(flight1, width, height, false);
-        flight2 = Bitmap.createScaledBitmap(flight2, width, height, false);
+        astronaut1 = Bitmap.createScaledBitmap(astronaut1, width, height, false);
+        astronaut2 = Bitmap.createScaledBitmap(astronaut2, width, height, false);
+        astronautUP = Bitmap.createScaledBitmap(astronautUP, width, height, false);
+        astronautDown = Bitmap.createScaledBitmap(astronautDown, width, height, false);
 
-        shoot1 = BitmapFactory.decodeResource(res, R.drawable.shoot1);
-        shoot2 = BitmapFactory.decodeResource(res, R.drawable.shoot2);
-        shoot3 = BitmapFactory.decodeResource(res, R.drawable.shoot3);
-        shoot4 = BitmapFactory.decodeResource(res, R.drawable.shoot4);
-        shoot5 = BitmapFactory.decodeResource(res, R.drawable.shoot5);
+        shoot1 = BitmapFactory.decodeResource(res, R.drawable.astronaut_shot);
+        shoot2 = BitmapFactory.decodeResource(res, R.drawable.astronaut_shot);
+        shoot3 = BitmapFactory.decodeResource(res, R.drawable.astronaut_shot);
+        shoot4 = BitmapFactory.decodeResource(res, R.drawable.astronaut_shot);
+        shoot5 = BitmapFactory.decodeResource(res, R.drawable.astronaut_shot);
 
         shoot1 = Bitmap.createScaledBitmap(shoot1, width, height, false);
         shoot2 = Bitmap.createScaledBitmap(shoot2, width, height, false);
@@ -52,22 +56,27 @@ public class Astronaut {
         shoot4 = Bitmap.createScaledBitmap(shoot4, width, height, false);
         shoot5 = Bitmap.createScaledBitmap(shoot5, width, height, false);
 
-        dead = BitmapFactory.decodeResource(res, R.drawable.dead);
-        dead = Bitmap.createScaledBitmap(dead, width, height, false);
+        damage1 = BitmapFactory.decodeResource(res, R.drawable.astronaut_damage1);
+        damage2 = BitmapFactory.decodeResource(res, R.drawable.astronaut_damage2);
+        damage1 = Bitmap.createScaledBitmap(damage1, width, height, false);
+        int damage2Width = (int)(damage2.getWidth() /2 *screenRatioY);
+        damage2 = Bitmap.createScaledBitmap(damage2, damage2Width, height, false);
 
-        y = screenY / 2;
+        y = screenY/2 - height/2;
         x = (int) (64 * screenRatioX);
     }
 
     public Bitmap getFlight () {
         if(damage){
+            damageCounter++;
             if(damageCounter>8){
                 damage=false;
                 damageCounter=0;
+            }else if (damageCounter>2 && damageCounter<6){
+                return damage2;
             }else{
-                damageCounter++;
+                return damage1;
             }
-            return dead;
         }
 
         if (toShoot != 0 && toShoot <= bulletLimiter) {
@@ -105,13 +114,19 @@ public class Astronaut {
             return shoot5;
         }
 
+        if(isGoingUp){
+            return  astronautUP;
+        }else if (isGoingDown){
+            return astronautDown;
+        }
+
         if (dashCounter == 0) {
             dashCounter++;
-            return flight1;
+            return astronaut1;
         }
         dashCounter--;
 
-        return flight2;
+        return astronaut2;
     }
 
     public Rect getCollisionShape() {
@@ -119,7 +134,7 @@ public class Astronaut {
     }
 
     public Bitmap getDead() {
-        return dead;
+        return damage2;
     }
 
     public void setDamage(int AsteroidType, double Size) {

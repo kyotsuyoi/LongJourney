@@ -1,9 +1,15 @@
 package com.long_journey;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 
 import java.lang.reflect.Type;
 import java.util.Random;
@@ -13,6 +19,8 @@ import static com.long_journey.GameView.screenRatioY;
 
 public class Asteroid {
 
+    private static final String LONG_JOURNEY_PREFERENCES = "LONG_JOURNEY_PREFERENCES";
+    private SharedPreferences settings;
     public int speed = 20;
     public int HP = 1;
     public boolean wasShot = true;
@@ -29,12 +37,14 @@ public class Asteroid {
     private AsteroidSizes asteroidSizes;
     private Random random = new Random();
 
-    public Asteroid(Resources res, AsteroidSizes asteroidSizes) {
+    private SoundPool soundPoolExplosion;
+    private int explosionSound;
+
+    public Asteroid(Resources res, AsteroidSizes asteroidSizes, Context context) {
         red_orb = BitmapFactory.decodeResource(res, R.drawable.red_orb);
         blue_orb = BitmapFactory.decodeResource(res, R.drawable.blue_orb);
         metal = BitmapFactory.decodeResource(res, R.drawable.metal);
 
-        
         red_orb = Bitmap.createScaledBitmap(
                 red_orb, (int) (red_orb.getWidth() * screenRatioX * 2),
                 (int) (red_orb.getHeight() * screenRatioY * 2),
@@ -54,6 +64,22 @@ public class Asteroid {
         y =- height;
 
         this.asteroidSizes = asteroidSizes;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .build();
+
+            soundPoolExplosion = new SoundPool.Builder()
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        }else {
+            soundPoolExplosion = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        settings = context.getSharedPreferences(LONG_JOURNEY_PREFERENCES, 0);
+        explosionSound = soundPoolExplosion.load(context, R.raw.explosion, 1);
     }
 
     public Bitmap getAsteroid () {
@@ -122,7 +148,7 @@ public class Asteroid {
         RotationSpeed = array[random];
     }
 
-    private void setRandomSpeed(int SpeedBound, int screenX, int screenY) {
+    private void setRandomSpeedAndStartPosition(int SpeedBound, int screenX, int screenY) {
         if(AsteroidType!=4){
             int bound = (int) (SpeedBound * screenRatioX);
             speed = random.nextInt(bound);
@@ -131,7 +157,12 @@ public class Asteroid {
                 speed = (int) (10 * screenRatioX);
 
             x = screenX;
-            y = random.nextInt(screenY - height*2);
+            int r = random.nextInt(screenY);
+            if(r+height>screenY){
+                y = screenY-height;
+            }else {
+                y = r;
+            }
         }else {
             speed = 1;
         }
@@ -236,10 +267,10 @@ public class Asteroid {
         wasShot = false;
         Reward = false;
         RewardType=0;
-        setRandomSpeed(SpeedBound,screenX,screenY);
         setAsteroidType();
         Size = getRandomSize();
         setRandomRotationSpeed();
+        setRandomSpeedAndStartPosition(SpeedBound,screenX,screenY);
         setHP();
         width=asteroidSizes.getWidth(Size);
         height=asteroidSizes.getHeight(Size);
@@ -247,5 +278,21 @@ public class Asteroid {
 
     public int getAsteroidType(){
         return AsteroidType;
+    }
+
+    public void getExplosionSound(int screenX){
+        if (!settings.getBoolean("mute", false)) {
+            if (x<screenX/5) {
+                soundPoolExplosion.play(explosionSound, 1, 0.2f, 0, 0, 1);
+            }else if (x<screenX/5*2){
+                soundPoolExplosion.play(explosionSound, 1, 0.5f, 0, 0, 1);
+            }else if (x<screenX/5*3){
+                soundPoolExplosion.play(explosionSound, 1, 1, 0, 0, 1);
+            }else if (x<screenX/5*4){
+                soundPoolExplosion.play(explosionSound, 0.5f, 1, 0, 0, 1);
+            }else if (x<screenX/5*5){
+                soundPoolExplosion.play(explosionSound, 0.2f, 1, 0, 0, 1);
+            }
+        }
     }
 }
