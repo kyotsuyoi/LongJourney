@@ -1,6 +1,6 @@
 # TIRO: NORMAL
-![](gifs/normal.gif)
+![](app/gifs/normal.gif)
 # TIRO: SHOTGUN
-![](gifs/shotgun.gif)
+![](app/gifs/shotgun.gif)
 # TIRO: PIERCE
-![](gifs/pierce.gif)
+![](app/gifs/pierce.gif)
