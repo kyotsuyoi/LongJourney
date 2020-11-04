@@ -255,7 +255,7 @@ public class Asteroid {
             }
         }
         if(AsteroidType == 4){
-            HP = 1200;
+            HP = 4800;
         }
     }
 

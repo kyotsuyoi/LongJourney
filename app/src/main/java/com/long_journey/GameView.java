@@ -410,7 +410,7 @@ public class GameView extends SurfaceView implements Runnable {
             bullet2.x = astronaut.x + astronaut.width;
             bullet2.y = astronaut.y + (((astronaut.height / 3)+((astronaut.height / 3)/2)));
             bullets.add(bullet2);
-        }else if(astronaut.GunLevel>=3){
+        }else if(astronaut.GunLevel==3){
             Bullet bullet1 = new Bullet(getResources());
             bullet1.x = astronaut.x + astronaut.width;
             bullet1.y = astronaut.y + (astronaut.height / 3)/2;
@@ -425,11 +425,55 @@ public class GameView extends SurfaceView implements Runnable {
             bullet3.x = astronaut.x + astronaut.width;
             bullet3.y = astronaut.y + (((astronaut.height / 3)+((astronaut.height / 3)/2)));
             bullets.add(bullet3);
+        }else if(astronaut.GunLevel==4){
+            Bullet bullet1 = new Bullet(getResources());
+            bullet1.x = astronaut.x + astronaut.width;
+            bullet1.y = astronaut.y + (astronaut.height / 3)/4;
+            bullets.add(bullet1);
+
+            Bullet bullet2 = new Bullet(getResources());
+            bullet2.x = astronaut.x + astronaut.width;
+            bullet2.y = astronaut.y + (astronaut.height / 3);
+            bullets.add(bullet2);
+
+            Bullet bullet3 = new Bullet(getResources());
+            bullet3.x = astronaut.x + astronaut.width;
+            bullet3.y = astronaut.y + (((astronaut.height / 3)+((astronaut.height / 2)/2)));
+            bullets.add(bullet3);
+
+            Bullet bullet4 = new Bullet(getResources());
+            bullet4.x = astronaut.x + astronaut.width + (astronaut.width/2);
+            bullet4.y = astronaut.y + (astronaut.height / 3);
+            bullets.add(bullet4);
+        }else if(astronaut.GunLevel==5){
+            Bullet bullet2 = new Bullet(getResources());
+            bullet2.x = astronaut.x + (astronaut.width+astronaut.width/8);
+            bullet2.y = astronaut.y;
+            bullets.add(bullet2);
+
+            Bullet bullet3 = new Bullet(getResources());
+            bullet3.x = astronaut.x + (astronaut.width+astronaut.width/4);
+            bullet3.y = astronaut.y + (astronaut.height / 3)/2;
+            bullets.add(bullet3);
+
+            Bullet bullet4 = new Bullet(getResources());
+            bullet4.x = astronaut.x + (astronaut.width+astronaut.width/3);
+            bullet4.y = astronaut.y + (astronaut.height / 3);
+            bullets.add(bullet4);
+
+            Bullet bullet5 = new Bullet(getResources());
+            bullet5.x = astronaut.x + (astronaut.width+astronaut.width/4);
+            bullet5.y = astronaut.y + (((astronaut.height / 3)+((astronaut.height / 3)/2)));
+            bullets.add(bullet5);
+
+            Bullet bullet6 = new Bullet(getResources());
+            bullet6.x = astronaut.x + (astronaut.width+astronaut.width/8);
+            bullet6.y = astronaut.y + ((astronaut.height / 3)*2);
+            bullets.add(bullet6);
         }
     }
 
     public void newShotGunBullet() {
-
         if (!settings.getBoolean("mute", false)) {
             soundPoolTripleShot.play(tripleShotSound, 1, 1, 0, 0, 1);
         }
@@ -438,17 +482,33 @@ public class GameView extends SurfaceView implements Runnable {
         }else if(astronaut.GunLevel==2){
             setNewShotGunBullet(0);
             setNewShotGunBullet(astronaut.width/4);
-        }else if(astronaut.GunLevel>=3){
+        }else if(astronaut.GunLevel==3){
             setNewShotGunBullet(0);
             setNewShotGunBullet(astronaut.width/4);
             setNewShotGunBullet((astronaut.width/4)*2);
+        }else if(astronaut.GunLevel==4){
+            setNewShotGunBullet(0);
+            setNewShotGunBullet(astronaut.width/4);
+            setNewShotGunBullet((astronaut.width/4)*2);
+            setNewShotGunBullet((astronaut.width/4)*3);
+        }else if(astronaut.GunLevel==5){
+            setNewShotGunBullet(0);
+            setNewShotGunBullet(astronaut.width/4);
+            setNewShotGunBullet((astronaut.width/4)*2);
+            setNewShotGunBullet((astronaut.width/4)*3);
+            setNewShotGunBullet(astronaut.width);
         }
     }
 
     private void setNewShotGunBullet(int x){
 
+        Bullet bullet8 = new Bullet(getResources());
+        bullet8.x = astronaut.x + astronaut.width+x;
+        bullet8.y = astronaut.y - (astronaut.height/3);
+        bullets.add(bullet8);
+
         Bullet bullet1 = new Bullet(getResources());
-        bullet1.x = astronaut.x + astronaut.width+x;
+        bullet1.x = astronaut.x +(astronaut.width+astronaut.width/16)+x;
         bullet1.y = astronaut.y - (astronaut.height / 3)/2;
         bullets.add(bullet1);
 
@@ -478,9 +538,14 @@ public class GameView extends SurfaceView implements Runnable {
         bullets.add(bullet6);
 
         Bullet bullet7 = new Bullet(getResources());
-        bullet7.x = astronaut.x + astronaut.width+x;
+        bullet7.x = astronaut.x + (astronaut.width+astronaut.width/16)+x;
         bullet7.y = astronaut.y + ((astronaut.height / 3)*2)+((astronaut.height / 3)/2);
         bullets.add(bullet7);
+
+        Bullet bullet9 = new Bullet(getResources());
+        bullet9.x = astronaut.x + astronaut.width+x;
+        bullet9.y = astronaut.y + ((astronaut.height / 3)*2)+((astronaut.height / 3)/2)+((astronaut.height / 3)/2);
+        bullets.add(bullet9);
     }
 
     public void newPierceBullet() {
@@ -492,64 +557,37 @@ public class GameView extends SurfaceView implements Runnable {
         if(astronaut.GunLevel==1) {
             int sum=10;
             setNewPierceBullet(count);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
+            for (int i = 0; i < 4; i++) {
+                setNewPierceBullet(count+=sum);
+            }
             setNewPierceBullet(count +sum);
         }else if(astronaut.GunLevel==2){
             int sum=6;
             setNewPierceBullet(count);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
+            for (int i = 0; i < 10; i++) {
+                setNewPierceBullet(count+=sum);
+            }
             setNewPierceBullet(count +sum);
-        }else if(astronaut.GunLevel>=3){
+        }else if(astronaut.GunLevel==3){
             int sum=4;
             setNewPierceBullet(count);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
-            setNewPierceBullet(count+=sum);
+            for (int i = 0; i < 22; i++) {
+                setNewPierceBullet(count+=sum);
+            }
+            setNewPierceBullet(count +sum);
+        }else if(astronaut.GunLevel==4){
+            int sum=4;
+            setNewPierceBullet(count);
+            for (int i = 0; i < 46; i++) {
+                setNewPierceBullet(count+=sum);
+            }
+            setNewPierceBullet(count +sum);
+        }else if(astronaut.GunLevel==5){
+            int sum=4;
+            setNewPierceBullet(count);
+            for (int i = 0; i < 94; i++) {
+                setNewPierceBullet(count+=sum);
+            }
             setNewPierceBullet(count +sum);
         }
     }

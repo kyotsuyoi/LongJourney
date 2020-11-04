@@ -12,7 +12,7 @@ public class Astronaut {
 
     public int toShoot = 0;
     public int HP = 0;
-    public int GunLevel = 10;
+    public int GunLevel = 1;
     public boolean isCharge = false;
     public int chargedShootType = 0;
     public boolean isGoingUp, isGoingDown = false;
